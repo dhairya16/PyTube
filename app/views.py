@@ -27,3 +27,18 @@ def channel(request, slug):
 	}
 	return render(request, 'channel/channel_home.html', context)
 
+def edit_channel(request, slug):
+	channel = Channel.objects.get(slug=slug)
+	form = forms.EditChannelForm(instance=channel)
+
+	if request.method == 'POST':
+		form = forms.EditChannelForm(request.POST, request.FILES, instance=channel)
+		if form.is_valid():
+			form.save()
+			return redirect('mychannel', slug=slug)
+
+	context = {
+		'edit_form': form
+	}
+	return render(request, 'channel/edit_channel.html', context)
+
